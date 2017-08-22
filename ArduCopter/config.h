@@ -120,6 +120,10 @@
  # define RANGEFINDER_GLITCH_NUM_SAMPLES  3   // number of rangefinder glitches in a row to take new reading
 #endif
 
+#ifndef RANGEFINDER_HIGHEST_POINT_MODE
+ # define RANGEFINDER_HIGHEST_POINT_MODE  100   // below 1500, mode is off
+#endif
+
 //////////////////////////////////////////////////////////////////////////////
 // Proximity sensor
 //

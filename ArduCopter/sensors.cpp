@@ -1,4 +1,6 @@
 #include "Copter.h"
+using namespace std;
+#include <vector>
 
 void Copter::init_barometer(bool full_calibration)
 {
@@ -37,22 +39,38 @@ void Copter::init_rangefinder(void)
 void Copter::read_rangefinder(void)
 {
 #if RANGEFINDER_ENABLED == ENABLED
-    rangefinder.update();
+  const uint16_t ARRAY_MAX = 100;
+  static std::vector<uint16_t> dist_vector;
+  rangefinder.update();
 
-    if (rangefinder.num_sensors() > 0 &&
-        should_log(MASK_LOG_CTUN)) {
-        DataFlash.Log_Write_RFND(rangefinder);
-    }
+  if (rangefinder.num_sensors() > 0 &&
+      should_log(MASK_LOG_CTUN)) {
+      DataFlash.Log_Write_RFND(rangefinder);
+  }
 
-    rangefinder_state.alt_healthy = ((rangefinder.status_orient(ROTATION_PITCH_270) == RangeFinder::RangeFinder_Good) && (rangefinder.range_valid_count_orient(ROTATION_PITCH_270) >= RANGEFINDER_HEALTH_MAX));
+  rangefinder_state.alt_healthy = ((rangefinder.status_orient(ROTATION_PITCH_270) == RangeFinder::RangeFinder_Good) && (rangefinder.range_valid_count_orient(ROTATION_PITCH_270) >= RANGEFINDER_HEALTH_MAX));
 
-    int16_t temp_alt = rangefinder.distance_cm_orient(ROTATION_PITCH_270);
+  int16_t temp_alt = rangefinder.distance_cm_orient(ROTATION_PITCH_270);
 
- #if RANGEFINDER_TILT_CORRECTION == ENABLED
-    // correct alt for angle of the rangefinder
-    temp_alt = (float)temp_alt * MAX(0.707f, ahrs.get_rotation_body_to_ned().c.z);
- #endif
+  #if RANGEFINDER_TILT_CORRECTION == ENABLED
+  // correct alt for angle of the rangefinder
+  temp_alt = (float)temp_alt * MAX(0.707f, ahrs.get_rotation_body_to_ned().c.z);
+  #endif
 
+   if (dist_vector.size() < ARRAY_MAX) {
+     dist_vector.push_back(temp_alt);
+   } else if (dist_vector.size() == ARRAY_MAX) {
+     dist_vector.erase(dist_vector.begin());
+     dist_vector.push_back(temp_alt);
+   }
+   // g.rangefinder_highest_point_mode > 1500 && 
+   if (!takeoff_state.running) {
+     for(unsigned i=0;i < dist_vector.size();i++) {
+         if(dist_vector[i] < temp_alt) {
+           temp_alt = dist_vector[i];
+         }
+     }
+   }
     rangefinder_state.alt_cm = temp_alt;
 
     // filter rangefinder for use by AC_WPNav
@@ -481,7 +499,7 @@ void Copter::update_sensor_status_flags(void)
 
     if (copter.failsafe.battery) {
          control_sensors_health &= ~MAV_SYS_STATUS_SENSOR_BATTERY;                                                                    }
-    
+
 #if FRSKY_TELEM_ENABLED == ENABLED
     // give mask of error flags to Frsky_Telemetry
     frsky_telemetry.update_sensor_status_flags(~control_sensors_health & control_sensors_enabled & control_sensors_present);
