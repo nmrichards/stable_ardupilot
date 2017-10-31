@@ -62,6 +62,7 @@ AP_RangeFinder_Backend *AP_RangeFinder_LightWareI2C::detect(RangeFinder::RangeFi
 
 void AP_RangeFinder_LightWareI2C::init()
 {
+  dist_vector = {};
     // call timer() at 20Hz
     _dev->register_periodic_callback(50000,
                                      FUNCTOR_BIND_MEMBER(&AP_RangeFinder_LightWareI2C::timer, void));
@@ -70,6 +71,7 @@ void AP_RangeFinder_LightWareI2C::init()
 // read - return last value measured by sensor
 bool AP_RangeFinder_LightWareI2C::get_reading(uint16_t &reading_cm)
 {
+  // static uint16_t dist_array[40];
     be16_t val;
 
     if (state.address == 0) {
@@ -81,6 +83,22 @@ bool AP_RangeFinder_LightWareI2C::get_reading(uint16_t &reading_cm)
     if (ret) {
         // combine results into distance
         reading_cm = be16toh(val);
+        // Checks the distance vector if full or not and then handles
+        // new reading accordingly
+       if (dist_vector.size() < RANGEFINDER_MAX_HEIGHT_READINGS) {
+         dist_vector.push_back(reading_cm);
+       } else if (dist_vector.size() == RANGEFINDER_MAX_HEIGHT_READINGS) {
+         dist_vector.erase(dist_vector.begin());
+         dist_vector.push_back(reading_cm);
+       }
+
+       // Looks for the smallest value and then sets the temp_alt to that value
+       //  if (g.rangefinder_highest_point_mode > 1500 && !takeoff_state.running) {
+       for(unsigned i=0;i < dist_vector.size();i++) {
+           if(dist_vector[i] < reading_cm) {
+             reading_cm = dist_vector[i];
+           }
+       }
     }
 
     return ret;

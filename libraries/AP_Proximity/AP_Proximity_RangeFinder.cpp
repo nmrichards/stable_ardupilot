@@ -19,6 +19,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <AP_RangeFinder/RangeFinder_Backend.h>
+using namespace std;
+#include <vector>
 
 extern const AP_HAL::HAL& hal;
 
@@ -48,8 +50,11 @@ void AP_Proximity_RangeFinder::update(void)
             // check for horizontal range finders
             if (sensor->orientation() <= ROTATION_YAW_315) {
                 uint8_t sector = (uint8_t)sensor->orientation();
+
+                int16_t temp_alt = sensor->distance_cm();
+
                 _angle[sector] = sector * 45;
-                _distance[sector] = sensor->distance_cm() / 100.0f;
+                _distance[sector] = temp_alt / 100.0f;
                 _distance_min = sensor->min_distance_cm() / 100.0f;
                 _distance_max = sensor->max_distance_cm() / 100.0f;
                 _distance_valid[sector] = (_distance[sector] >= _distance_min) && (_distance[sector] <= _distance_max);

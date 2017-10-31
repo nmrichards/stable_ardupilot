@@ -521,7 +521,7 @@ const AP_Param::GroupInfo RangeFinder::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("4_ORIENT", 56, RangeFinder, state[3].orientation, ROTATION_PITCH_270),
 #endif
-    
+
     AP_GROUPEND
 };
 
@@ -545,6 +545,7 @@ RangeFinder::RangeFinder(AP_SerialManager &_serial_manager, enum Rotation orient
  */
 void RangeFinder::init(void)
 {
+
     if (num_instances != 0) {
         // init called a 2nd time?
         return;
@@ -601,7 +602,7 @@ bool RangeFinder::_add_backend(AP_RangeFinder_Backend *backend)
 }
 
 /*
-  detect if an instance of a rangefinder is connected. 
+  detect if an instance of a rangefinder is connected.
  */
 void RangeFinder::detect_instance(uint8_t instance)
 {

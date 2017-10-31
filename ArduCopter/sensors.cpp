@@ -1,6 +1,4 @@
 #include "Copter.h"
-using namespace std;
-#include <vector>
 
 void Copter::init_barometer(bool full_calibration)
 {
@@ -39,8 +37,6 @@ void Copter::init_rangefinder(void)
 void Copter::read_rangefinder(void)
 {
 #if RANGEFINDER_ENABLED == ENABLED
-  const long ARRAY_MAX = 120000;
-  static std::vector<uint16_t> dist_vector(ARRAY_MAX);
   rangefinder.update();
 
   if (rangefinder.num_sensors() > 0 &&
@@ -57,19 +53,6 @@ void Copter::read_rangefinder(void)
   temp_alt = (float)temp_alt * MAX(0.707f, ahrs.get_rotation_body_to_ned().c.z);
   #endif
 
-   if (dist_vector.size() < ARRAY_MAX) {
-     dist_vector.push_back(temp_alt);
-   } else if (dist_vector.size() == ARRAY_MAX) {
-     dist_vector.erase(dist_vector.begin());
-     dist_vector.push_back(temp_alt);
-   }
-  //  if (g.rangefinder_highest_point_mode > 1500 && !takeoff_state.running) {
-     for(unsigned i=0;i < dist_vector.size();i++) {
-         if(dist_vector[i] < temp_alt) {
-           temp_alt = dist_vector[i];
-         }
-     }
-  //  }
     rangefinder_state.alt_cm = temp_alt;
 
     // filter rangefinder for use by AC_WPNav
