@@ -85,6 +85,7 @@ bool AP_RangeFinder_LightWareI2C::get_reading(uint16_t &reading_cm)
         reading_cm = be16toh(val);
         // Checks the distance vector if full or not and then handles
         // new reading accordingly
+
        if (dist_vector.size() < RANGEFINDER_MAX_HEIGHT_READINGS) {
          dist_vector.push_back(reading_cm);
        } else if (dist_vector.size() == RANGEFINDER_MAX_HEIGHT_READINGS) {
@@ -93,11 +94,22 @@ bool AP_RangeFinder_LightWareI2C::get_reading(uint16_t &reading_cm)
        }
 
        // Looks for the smallest value and then sets the temp_alt to that value
-       //  if (g.rangefinder_highest_point_mode > 1500 && !takeoff_state.running) {
        for(unsigned i=0;i < dist_vector.size();i++) {
            if(dist_vector[i] < reading_cm) {
-             reading_cm = dist_vector[i];
+             rangefinder_min_value = dist_vector[i];
            }
+       }
+
+       for(unsigned i=0;i < dist_vector.size();i++) {
+           if(dist_vector[i] > reading_cm) {
+             rangefinder_max_value = dist_vector[i];
+           }
+       }
+
+       crop_height = rangefinder_max_value - rangefinder_min_value;
+
+       if(_state.average_flight_mode && !takeoff_state.running) {
+         reading_cm = rangefinder_min_value;
        }
     }
 

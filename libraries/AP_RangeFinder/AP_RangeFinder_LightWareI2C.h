@@ -19,6 +19,11 @@ public:
     // update state
     void update(void);
 
+    // Checks for the averaging out altitude flight mode for crop flying.
+    int rangefinder_max_value;
+    int rangefinder_min_value;
+    int crop_height;
+
 protected:
 
     virtual MAV_DISTANCE_SENSOR _get_mav_distance_sensor_type() const override {

@@ -84,7 +84,6 @@ public:
         uint16_t               pre_arm_distance_min;    // min distance captured during pre-arm checks
         uint16_t               pre_arm_distance_max;    // max distance captured during pre-arm checks
 
-
         AP_Int8  type;
         AP_Int8  pin;
         AP_Int8  ratiometric;
@@ -102,6 +101,8 @@ public:
     };
 
     AP_Int16 _powersave_range;
+
+
 
     // parameters for each instance
     static const struct AP_Param::GroupInfo var_info[];
