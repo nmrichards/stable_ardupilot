@@ -120,8 +120,12 @@
  # define RANGEFINDER_GLITCH_NUM_SAMPLES  3   // number of rangefinder glitches in a row to take new reading
 #endif
 
-#ifndef RANGEFINDER_HIGHEST_POINT_MODE
- # define RANGEFINDER_HIGHEST_POINT_MODE  100   // below 1500, mode is off
+#ifndef RNGFND_FLIGHT_MODE
+ # define RNGFND_FLIGHT_MODE  0   // mode is off
+#endif
+
+#ifndef RNGFND_FLIGHT
+ # define RNGFND_FLIGHT  20   // in hz so holds for one second
 #endif
 
 //////////////////////////////////////////////////////////////////////////////

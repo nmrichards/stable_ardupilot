@@ -140,13 +140,21 @@ const AP_Param::Info Copter::var_info[] = {
     // @User: Standard
     GSCALAR(rtl_speed_cms,   "RTL_SPEED",     0),
 
-    // @Param: RANGEFINDER_HIGHEST_POINT_MODE
-    // @DisplayName: Rangefinder Highest Point Mode
-    // @Description: When set to over 1500, the rangefinder will find the highest point over a one second period and use that value instead of being updated every time it takes a measurement
-    // @Range: 0 2000
-    // @Increment: 50
+    // @Param: RNGFND_FLIGHT_MODE
+    // @DisplayName: Rangefinder Flight Mode
+    // @Description: Used to turn on rangefinder flight mode which holds the lowest altitude for x amount of seconds
+    // @Range: 0:PassThru, 1:LowFlightMode
+    // @Increment: 1
     // @User: Standard
-    GSCALAR(rangefinder_highest_point_mode, "RANGEFINDER_HIGHEST_POINT_MODE", 1500),
+    GSCALAR(rangefinder_flight_mode, "RNGFND_FLIGHT_MODE", 0),
+
+    // @Param: RNGFND_FLIGHT
+    // @DisplayName: Rangefinder Flight
+    // @Description: Duration of the RNGFND_FLIGHT_MODE hold.
+    // @Range: 0, 200
+    // @Increment: 20
+    // @User: Standard
+    GSCALAR(rangefinder_flight, "RNGFND_FLIGHT", 0),
 
     // @Param: RNGFND_GAIN
     // @DisplayName: Rangefinder gain

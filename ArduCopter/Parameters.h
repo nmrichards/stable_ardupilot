@@ -226,9 +226,10 @@ public:
         k_param_rtl_cone_slope, // 137
 
         //
-        // 140: Sensor parameters
+        // 138: Sensor parameters
         //
-        k_param_rangefinder_highest_point_mode, // 139
+        k_param_rangefinder_flight_mode, // 138
+        k_param_rangefinder_flight, // 139
         k_param_imu = 140, // deprecated - can be deleted
         k_param_battery_monitoring = 141,   // deprecated - can be deleted
         k_param_volt_div_ratio, // deprecated - can be deleted
@@ -411,7 +412,8 @@ public:
     AP_Int16        poshold_brake_angle_max;    // PosHold flight mode's max lean angle during braking in centi-degrees
 
     // Sensors
-    AP_Int16        rangefinder_highest_point_mode;   // if set, it will take the highest point over 1 second.
+    AP_Int16        rangefinder_flight_mode;   // if set, it retains the low point of the flight
+    AP_Int16        rangefinder_flight;   // the duration of the flight mode hold altitude
 
     // Waypoints
     //
