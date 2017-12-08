@@ -196,6 +196,7 @@ void Copter::init_aux_switch_function(int8_t ch_option, uint8_t ch_flag)
         case AUXSW_AVOID_ADSB:
         case AUXSW_PRECISION_LOITER:
         case AUXSW_AVOID_PROXIMITY:
+        case AUXSW_RNGFIND_FLIGHT_MODE:
             do_aux_switch_function(ch_option, ch_flag);
             break;
     }
@@ -310,6 +311,20 @@ void Copter::do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
                 rangefinder_state.enabled = true;
             } else {
                 rangefinder_state.enabled = false;
+            }
+#endif
+            break;
+        case AUXSW_RNGFIND_FLIGHT_MODE:
+            // enable/disable flight mode
+#if RANGEFINDER_ENABLED == ENABLED
+            switch (ch_flag) {
+              case AUX_SWITCH_HIGH:
+                  rangefinder.update_average_flight_mode(true);
+                    // gcs().send_text(MAV_SEVERITY_INFO, rangefinder.get_average_flight_mode());
+                  break;
+              case AUX_SWITCH_LOW:
+                  rangefinder.update_average_flight_mode(false);
+                  break;
             }
 #endif
             break;
@@ -591,18 +606,6 @@ void Copter::do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
                 break;
             case AUX_SWITCH_LOW:
                 init_disarm_motors();
-                break;
-            }
-            break;
-
-        case AUXSW_RNGFIND_FLIGHT_MODE:
-            // enable/disable flight mode
-            switch (ch_flag) {
-            case AUX_SWITCH_HIGH:
-                rangefinder_state.average_flight_mode = true;
-                break;
-            case AUX_SWITCH_LOW:
-                rangefinder_state.average_flight_mode = false;
                 break;
             }
             break;

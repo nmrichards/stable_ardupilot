@@ -22,7 +22,7 @@ public:
     // Checks for the averaging out altitude flight mode for crop flying.
     int rangefinder_max_value;
     int rangefinder_min_value;
-    int crop_height;
+    // int crop_height;
 
 protected:
 

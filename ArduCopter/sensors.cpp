@@ -45,6 +45,7 @@ void Copter::read_rangefinder(void)
   }
 
   rangefinder_state.alt_healthy = ((rangefinder.status_orient(ROTATION_PITCH_270) == RangeFinder::RangeFinder_Good) && (rangefinder.range_valid_count_orient(ROTATION_PITCH_270) >= RANGEFINDER_HEALTH_MAX));
+  // rangefinder.average_flight_mode = rangefinder_state.average_flight_mode;
 
   int16_t temp_alt = rangefinder.distance_cm_orient(ROTATION_PITCH_270);
 

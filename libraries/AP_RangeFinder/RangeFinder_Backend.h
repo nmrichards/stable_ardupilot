@@ -42,6 +42,7 @@ public:
     int16_t max_distance_cm() const { return state.max_distance_cm; }
     int16_t min_distance_cm() const { return state.min_distance_cm; }
     int16_t ground_clearance_cm() const { return state.ground_clearance_cm; }
+
     MAV_DISTANCE_SENSOR get_mav_distance_sensor_type() const {
         if (state.type == RangeFinder::RangeFinder_TYPE_NONE) {
             return MAV_DISTANCE_SENSOR_UNKNOWN;
@@ -81,7 +82,7 @@ protected:
     RangeFinder::RangeFinder_State &state;
 
     // semaphore for access to shared frontend data
-    AP_HAL::Semaphore *_sem;    
+    AP_HAL::Semaphore *_sem;
 
     virtual MAV_DISTANCE_SENSOR _get_mav_distance_sensor_type() const = 0;
 };

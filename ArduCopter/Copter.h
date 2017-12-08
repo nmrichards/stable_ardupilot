@@ -205,8 +205,7 @@ private:
         uint32_t last_healthy_ms;
         LowPassFilterFloat alt_cm_filt; // altitude filter
         int8_t glitch_count;
-        bool average_flight_mode:1;
-    } rangefinder_state = { false, false, 0, 0 };
+    } rangefinder_state = { false, false, 0, 0, false };
 
     AP_RPM rpm_sensor;
 

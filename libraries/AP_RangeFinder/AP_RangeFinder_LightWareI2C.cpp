@@ -102,15 +102,15 @@ bool AP_RangeFinder_LightWareI2C::get_reading(uint16_t &reading_cm)
 
        for(unsigned i=0;i < dist_vector.size();i++) {
            if(dist_vector[i] > reading_cm) {
-             rangefinder_max_value = dist_vector[i];
+             reading_cm = dist_vector[i];
            }
        }
+       //
+       // crop_height = rangefinder_max_value - rangefinder_min_value;
 
-       crop_height = rangefinder_max_value - rangefinder_min_value;
-
-       if(_state.average_flight_mode && !takeoff_state.running) {
-         reading_cm = rangefinder_min_value;
-       }
+       // if(!state.average_flight_mode) {
+         // reading_cm = rangefinder_min_value;
+       // }
     }
 
     return ret;

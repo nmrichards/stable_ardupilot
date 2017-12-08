@@ -77,7 +77,7 @@ public:
         uint8_t                instance;    // the instance number of this RangeFinder
         uint16_t               distance_cm; // distance: in cm
         uint16_t               voltage_mv;  // voltage in millivolts,
-                                            // if applicable, otherwise 0
+        bool                   average_flight_mode;                      // if applicable, otherwise 0
         enum RangeFinder_Status status;     // sensor status
         uint8_t                range_valid_count;   // number of consecutive valid readings (maxes out at 10)
         bool                   pre_arm_check;   // true if sensor has passed pre-arm checks
@@ -111,6 +111,14 @@ public:
     uint8_t num_sensors(void) const {
         return num_instances;
     }
+
+    // bool average_flight_mode() {
+    //   return state.average_flight_mode;
+    // }
+
+    void update_average_flight_mode(bool flight_mode);
+
+    bool get_average_flight_mode();
 
     // detect and initialise any available rangefinders
     void init(void);
@@ -163,6 +171,7 @@ private:
     RangeFinder_State state[RANGEFINDER_MAX_INSTANCES];
     AP_RangeFinder_Backend *drivers[RANGEFINDER_MAX_INSTANCES];
     uint8_t num_instances:3;
+
     float estimated_terrain_height;
     AP_SerialManager &serial_manager;
     Vector3f pos_offset_zero;   // allows returning position offsets of zero for invalid requests

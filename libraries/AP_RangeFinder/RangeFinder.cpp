@@ -588,6 +588,16 @@ void RangeFinder::update(void)
     }
 }
 
+void RangeFinder::update_average_flight_mode(bool flight_mode) {
+  for (uint8_t i=0; i<num_instances; i++) {
+    state[i].average_flight_mode = flight_mode;
+  }
+}
+
+bool RangeFinder::get_average_flight_mode() {
+  return state[0].average_flight_mode;
+}
+
 bool RangeFinder::_add_backend(AP_RangeFinder_Backend *backend)
 {
     if (!backend) {
